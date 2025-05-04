@@ -112,13 +112,6 @@ export async function POST(request) {
   try {
     const { prompt, history, image, chatSessionId } = await request.json();
     
-    console.log('API received request:', { 
-      promptPreview: prompt?.substring(0, 50), 
-      historyLength: history?.length,
-      hasImage: !!image,
-      chatSessionId
-    });
-
     // Make sure we have a valid chat session ID
     if (!chatSessionId) {
       return NextResponse.json(

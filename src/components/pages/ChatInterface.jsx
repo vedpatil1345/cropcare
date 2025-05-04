@@ -19,10 +19,6 @@ const ChatInterface = ({ userId, chatSessionId, onChatUpdate, onNewSession }) =>
   const chatContainerRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  // Log props on mount and changes for debugging
-  useEffect(() => {
-    console.log('ChatInterface props:', { userId, chatSessionId });
-  }, [userId, chatSessionId]);
 
   // Load chat history when chatSessionId changes
   useEffect(() => {
@@ -55,13 +51,12 @@ const ChatInterface = ({ userId, chatSessionId, onChatUpdate, onNewSession }) =>
       
       // Make sure we have both userId and chatSessionId
       if (!userId || !chatSessionId) {
-        console.log('Missing userId or chatSessionId in loadChatHistory', { userId, chatSessionId });
         setChatHistory([InitialMsg]);
         setIsInitializing(false);
         return;
       }
       
-      console.log('Loading chat history for:', { userId, chatSessionId });
+      
       
       const { data, error } = await supabase
         .from('chat_history')
@@ -75,7 +70,6 @@ const ChatInterface = ({ userId, chatSessionId, onChatUpdate, onNewSession }) =>
         throw error;
       }
 
-      console.log('Loaded chat data:', data);
 
       if (data && Array.isArray(data) && data.length > 0) {
         const formattedHistory = data.map(msg => ({
@@ -121,7 +115,7 @@ const ChatInterface = ({ userId, chatSessionId, onChatUpdate, onNewSession }) =>
         created_at: new Date().toISOString()
       };
       
-      console.log('Saving message to Supabase:', messageToSave);
+
       
       // First check if table exists and has expected structure
       const { error: tableCheckError } = await supabase
@@ -144,7 +138,6 @@ const ChatInterface = ({ userId, chatSessionId, onChatUpdate, onNewSession }) =>
         throw new Error(`Insert failed: ${JSON.stringify(error)}`);
       }
       
-      console.log('Successfully saved message:', data);
       return data;
     } catch (error) {
       // Improve error logging with more details
@@ -169,9 +162,7 @@ const ChatInterface = ({ userId, chatSessionId, onChatUpdate, onNewSession }) =>
     
     // If there's no chatSessionId, we need to create a new session
     if (!chatSessionId && onNewSession) {
-      console.log('No chatSessionId, creating new session');
       const newSessionId = await onNewSession();
-      console.log('Created new session:', newSessionId);
       
       // Store the message temporarily
       localStorage.setItem('pendingMessage', message);
@@ -200,7 +191,6 @@ const ChatInterface = ({ userId, chatSessionId, onChatUpdate, onNewSession }) =>
     // Update UI immediately for better user experience
     setChatHistory(prev => [...prev, userMessage]);
     
-    console.log('Sending message:', { userId, chatSessionId, message });
     
     // Clear input fields immediately for better UX
     const currentMessage = message;
@@ -216,8 +206,6 @@ const ChatInterface = ({ userId, chatSessionId, onChatUpdate, onNewSession }) =>
       if (!savedMessage) {
         console.error('Failed to save message to database, but continuing with local chat');
         // Continue anyway - frontend experience is priority
-      } else {
-        console.log('Message saved successfully:', savedMessage);
       }
     } catch (error) {
       console.error('Failed to save user message:', error);

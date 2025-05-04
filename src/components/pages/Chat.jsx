@@ -69,7 +69,6 @@ const Chat = ({ userId }) => {
       
       // Fall back to direct query if RPC fails
       if (groupError) {
-        console.log('RPC error, falling back to direct query:', groupError);
         
         // Get all chat sessions for this user
         const { data: sessions, error: sessionsError } = await supabase
