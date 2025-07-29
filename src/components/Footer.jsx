@@ -36,7 +36,7 @@ const Footer = () => {
           {/* Contact Info */}
           <div className="md:w-1/4">
             <h3 className="text-lg font-medium text-[#7f9972] mb-4">Contact Us</h3>
-            <p className="text-gray-600 dark:text-gray-300 mb-2">Email: vedpatil13042005@gmail.com</p>
+            <p className="text-gray-600 dark:text-gray-300 mb-2">Email: vedpatil130420005@gmail.com</p>
             <p className="text-gray-600 dark:text-gray-300 mb-2">Phone: +91 6355616223</p>
             <div className="flex mt-4">
               <a href="https://x.com/vedpatil1729" target="blank" className="mr-4 text-gray-600 hover:text-[#117955]">
