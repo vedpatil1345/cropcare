@@ -36,6 +36,7 @@ const NavLink = ({ href, children, isMobile = false, onClick }) => {
 const Navbar = () => {
   const pathname = usePathname();
   const isServicesPage = pathname === "/services";
+  const isCommunityPage = pathname.startsWith("/services/community");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const menuRef = useRef(null);
@@ -112,7 +113,7 @@ const Navbar = () => {
   ];
 
   return (
-    <>
+    !isCommunityPage&&<>
       <header className="shadow-xl backdrop-blur-lg z-50 sticky top-0 left-0 right-0 bg-white/80">
         <nav className="flex items-center justify-between px-5 py-1" aria-label="Services navigation">
           <Link href="/" className="py-1" aria-label="Homepage">

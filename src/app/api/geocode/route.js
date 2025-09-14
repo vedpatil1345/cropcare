@@ -1,29 +1,74 @@
-// pages/api/geocode.js
-export default async function GET(req, res) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ message: 'Method not allowed' });
-  }
-  
+
+export async function GET(request) {
   try {
-    const { q } = req.query;
+    const { searchParams } = new URL(request.url);
+    const q = searchParams.get('q');
     
     if (!q) {
-      return res.status(400).json({ message: 'Location query is required' });
+      return Response.json(
+        { message: 'Location query is required' },
+        { status: 400 }
+      );
     }
     
-    const API_KEY = process.env.OPENWEATHER_API_KEY;
+    // Use Open-Meteo's free geocoding API - no API key needed!
     const response = await fetch(
-      `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(q)}&limit=5&appid=${API_KEY}`
+      `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=5&language=en&format=json`
     );
     
     if (!response.ok) {
-      throw new Error(`OpenWeather Geocoding API returned ${response.status}: ${response.statusText}`);
+      throw new Error(`Open-Meteo Geocoding API returned ${response.status}: ${response.statusText}`);
     }
     
     const data = await response.json();
-    res.status(200).json(data);
+    
+    // Transform Open-Meteo response to match OpenWeather format for compatibility
+    const transformedData = [];
+    
+    if (data.results && data.results.length > 0) {
+      data.results.forEach(location => {
+        transformedData.push({
+          name: location.name,
+          lat: location.latitude,
+          lon: location.longitude,
+          country: location.country,
+          state: location.admin1 || location.admin2 || undefined, // Use admin1 (state/province) or admin2 as fallback
+          local_names: {
+            en: location.name
+          }
+        });
+      });
+    }
+    
+    return Response.json(transformedData, {
+      status: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+      },
+    });
+    
   } catch (error) {
     console.error('Error searching for location:', error);
-    res.status(500).json({ message: 'Error searching for location', error: error.message });
+    return Response.json(
+      { 
+        message: 'Error searching for location', 
+        error: error.message 
+      },
+      { status: 500 }
+    );
   }
+}
+
+// Handle OPTIONS request for CORS
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  });
 }

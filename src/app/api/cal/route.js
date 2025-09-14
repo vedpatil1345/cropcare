@@ -9,13 +9,63 @@ const modelName = "gemini-2.0-flash";
 // Regional crop database for major regions in India
 // This helps guide the AI with factual information about region-specific crops
 const regionalCropDatabase = {
-  "anand": ["tobacco", "rice", "banana", "wheat", "cotton", "pulses", "vegetables"],
-  "gujarat": ["cotton", "groundnut", "wheat", "bajra", "tobacco", "mustard", "cumin", "vegetables"],
-  "punjab": ["wheat", "rice", "cotton", "maize", "sugarcane", "barley", "vegetables"],
-  "kerala": ["coconut", "rubber", "banana", "rice", "pepper", "cardamom", "tapioca", "vegetables"],
-  "maharashtra": ["jowar", "bajra", "rice", "wheat", "pulses", "sugarcane", "turmeric", "vegetables"],
-  // Add more regions as needed
+  // Existing entries (expanded slightly for consistency)
+  "gujarat": ["cotton", "groundnut", "wheat", "bajra", "tobacco", "mustard", "cumin", "onion", "sesame"],
+  "punjab": ["wheat", "rice", "cotton", "maize", "sugarcane", "barley", "potato", "pulses"],
+  "kerala": ["coconut", "rubber", "banana", "rice", "pepper", "cardamom", "tapioca", "cashew", "pineapple", "vegetables"],
+  "maharashtra": ["jowar", "bajra", "rice", "wheat", "pulses", "sugarcane", "turmeric", "cotton", "onion", "grapes"],
+
+  // Northern States
+  "uttar pradesh": ["wheat", "rice", "sugarcane", "potato", "pulses", "maize", "mango", "barley", "mustard"],
+  "uttarakhand": ["rice", "wheat", "maize", "pulses", "potato", "barley", "apple", "kiwi", "soybean"],
+  "haryana": ["wheat", "rice", "cotton", "sugarcane", "maize", "mustard", "pulses", "bajra"],
+  "himachal pradesh": ["wheat", "maize", "rice", "apple", "potato", "pulses", "peach", "plum", "kiwi"],
+  "rajasthan": ["bajra", "jowar", "wheat", "mustard", "pulses", "cotton", "sesame", "guar", "chilli"],
+  "delhi": ["wheat", "rice", "mustard", "pulses", "vegetables", "flowers", "sugarcane", "maize"],
+
+  // Western States
+  "goa": ["rice", "cashew", "coconut", "sugarcane", "pulses", "vegetables", "mango", "pineapple"],
+  "dadra and nagar haveli and daman and diu": ["rice", "pulses", "groundnut", "vegetables", "sugarcane", "mango"], // Union Territory
+  "madhya pradesh": ["wheat", "rice", "pulses", "soybean", "maize", "jowar", "cotton", "mustard", "gram"],
+  "chhattisgarh": ["rice", "wheat", "maize", "pulses", "sugarcane", "millets", "cotton", "turmeric"],
+
+  // Southern States
+  "tamil nadu": ["rice", "millets", "sugarcane", "cotton", "groundnut", "pulses", "banana", "mango", "coconut", "spices"],
+  "karnataka": ["rice", "ragi", "jowar", "maize", "pulses", "sugarcane", "cotton", "coffee", "cardamom", "silk"],
+  "andhra pradesh": ["rice", "cotton", "groundnut", "sugarcane", "chilli", "tobacco", "mango", "pulses", "maize"],
+  "telangana": ["rice", "cotton", "maize", "sugarcane", "pulses", "chilli", "turmeric", "tobacco", "mango"],
+  "puducherry": ["rice", "sugarcane", "pulses", "groundnut", "vegetables", "coconut", "fruits"] , // Union Territory
+
+  // Eastern States
+  "west bengal": ["rice", "jute", "potato", "wheat", "pulses", "sugarcane", "mango", "tea", "pineapple"],
+  "odisha": ["rice", "pulses", "sugarcane", "jute", "maize", "turmeric", "cashew", "coconut", "potato"],
+  "jharkhand": ["rice", "maize", "pulses", "wheat", "sugarcane", "lac", "vegetables", "fruits"],
+  "bihar": ["rice", "wheat", "maize", "pulses", "sugarcane", "jute", "potato", "litchi", "mango"],
+  "sikkim": ["maize", "rice", "pulses", "cardamom", "buckwheat", "barley", "apple", "orange"],
+  "arunachal pradesh": ["rice", "maize", "millets", "pulses", "potato", "ginger", "apple", "kiwi"],
+  "nagaland": ["rice", "maize", "pulses", "sugarcane", "potato", "pineapple", "banana", "soybean"],
+  "manipur": ["rice", "maize", "pulses", "fruits", "vegetables", "sugarcane", "pineapple"],
+  "mizoram": ["rice", "maize", "pulses", "fruits", "vegetables", "ginger", "bamboo"],
+  "tripura": ["rice", "jute", "potato", "pulses", "sugarcane", "fruits", "rubber", "pineapple"],
+  "meghalaya": ["rice", "maize", "potato", "pulses", "ginger", "turmeric", "pineapple", "banana"],
+  "assam": ["rice", "tea", "jute", "potato", "pulses", "sugarcane", "muga silk", "citrus fruits"],
+
+  // Central and Northeastern Union Territories
+  "andaman and nicobar islands": ["rice", "coconut", "pulses", "sugarcane", "spices", "fruits", "rubber"], // Union Territory
+  "lakshadweep": ["coconut", "fruits"], // Union Territory (limited agriculture)
+  "chandigarh": ["wheat", "rice", "sugarcane", "potato", "vegetables", "flowers"], // Union Territory
+  "jammu and kashmir": ["rice", "maize", "wheat", "apple", "saffron", "walnut", "pulses", "barley"], // Note: As of 2025, includes Ladakh aspects but focused on J&K
+  "ladakh": ["barley", "wheat", "pulses", "apricot", "apple", "sea buckthorn"], // Union Territory (high-altitude crops
+  // New sub-region additions
+  "gujarat-charotar": ["tobacco", "paddy", "wheat", "millet", "groundnut", "potato", "vegetables"],  // Fertile, tobacco-dominant area
+  "gujarat-saurashtra": ["cotton", "groundnut", "sesame", "castor", "bajra", "maize", "cumin", "wheat", "mustard", "pulses"],  // Semi-arid, oilseed-focused
+  "maharashtra-vidarbha": ["cotton", "soybean", "rice", "jowar", "wheat", "pulses", "orange", "sugarcane", "turmeric"],  // Cotton belt with citrus
+  "maharashtra-marathwada": ["jowar", "cotton", "soybean", "pulses", "wheat", "bajra", "maize", "sugarcane"],  // Drought-prone, millet-heavy
+  "maharashtra-konkan": ["rice", "coconut", "cashew", "mango", "areca nut", "spices", "banana", "vegetables"],  // Coastal, plantation-oriented
+  "madhya pradesh-malwa": ["wheat", "soybean", "gram", "cotton", "maize", "pulses", "mustard", "jowar"],  // Plateau with diverse grains
+  "uttar pradesh-bundelkhand": ["pulses", "oilseeds", "wheat", "gram", "jowar", "bajra", "sesame", "mustard"],  // Arid, pulse-dominant
 };
+
 
 // Find closest matching region for any input location
 function findMatchingRegion(location) {
@@ -42,7 +92,7 @@ const getSystemInstruction = () => [
   {
     role: 'user',
     parts: [{ 
-      text: "You are CropAdvisor, a specialized agricultural AI assistant focusing on region-specific vegetable and crop recommendations across different parts of India. Your expertise includes understanding different agricultural zones, climate patterns, soil types, and traditional farming practices throughout India. When asked about crops suitable for any specific region in India, you provide precise, accurate information tailored to that location's unique growing conditions. You format your output as clean, valid JSON arrays when requested. Your responses are practical, scientifically accurate, and incorporate both modern agricultural science and traditional farming knowledge."
+      text: "You are CropAdvisor, a specialized agricultural AI assistant focusing on region-specific vegetable and crop recommendations across different parts of India in Regional Language Translation. Your expertise includes understanding different agricultural zones, climate patterns, soil types, and traditional farming practices throughout India. When asked about crops suitable for any specific region in India, you provide precise, accurate information tailored to that location's unique growing conditions. You format your output as clean, valid JSON arrays when requested. Your responses are practical, scientifically accurate, and incorporate both modern agricultural science and traditional farming knowledge."
     }]
   },
   {

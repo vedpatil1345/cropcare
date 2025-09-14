@@ -1,7 +1,7 @@
 'use client'
 
 import Link from "next/link";
-import { ArrowRight, MessageSquare, Cloud, Calendar, ShoppingCart } from "lucide-react";
+import { ArrowRight, MessageSquare, Cloud, Calendar, ShoppingCart, Users } from "lucide-react";
 
 export default function Services() {
   const services = [
@@ -28,9 +28,20 @@ export default function Services() {
       description: "Stay updated with current crop prices, market trends, and connect directly with potential buyers for your produce.",
       icon: <ShoppingCart size={48} className="text-[#6faa61]" />,
       link: "/services/market"
+    },
+    {
+      title: "Government Schemes",
+      description: "Explore various government schemes and initiatives designed to support farmers and boost agricultural development.",
+      icon: <ShoppingCart size={48} className="text-[#6faa61]" />,
+      link: "/schemes"
+    },
+    {
+      title: "Community Engagement",
+      description:" stay connected",
+      icon:<Users size={48} className="text-[#6faa61]"/>,
+      link:"/services/community"
     }
   ];
-
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="text-center mb-16">
