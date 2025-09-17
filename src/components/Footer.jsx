@@ -29,7 +29,7 @@ const Footer = () => {
                 <Link href="/services" className="text-gray-600 dark:text-gray-300 hover:text-[#117955] hover:underline">Services</Link>
               </li>
               <li className="mb-2">
-                <Link href="docs.cropcare.vedpatil.in" className="text-gray-600 dark:text-gray-300 hover:text-[#117955] hover:underline">Documentation</Link>
+                <a href="https://docs.cropcare.vedpatil.in" className="text-gray-600 dark:text-gray-300 hover:text-[#117955] hover:underline">Documentation</a>
               </li>
             </ul>
           </div>
