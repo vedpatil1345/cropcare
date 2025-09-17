@@ -21,7 +21,7 @@ const NavLink = ({ href, children, isMobile = false, onClick }) => {
     <Link
       href={href}
       className={`
-        text-[#6faa61] hover:text-[#20B297] text-lg font-medium 
+        text-[#6faa61] hover:text-[#20B297] text-md font-medium 
         ${isMobile ? 'py-4 border-b border-gray-200' : 'mx-2'} 
         ${isActive ? 'font-bold' : ''}
       `}
@@ -110,6 +110,8 @@ const Navbar = () => {
     { href: "/services/calender", label: "Crop-Calendar" },
     { href: "/services/weather", label: "Weather" },
     { href: "/services/market", label: "Market" },
+    { href: "/services/community", label: "Community" },
+    { href: "/schemes", label: "Schemes" },
   ];
 
   return (
@@ -127,12 +129,10 @@ const Navbar = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center">
             {serviceLinks.map((link) => (
-              // Only show Overview on the services main page
-              (isServicesPage || link.href !== "/services") && (
                 <NavLink key={link.href} href={link.href}>
                   {link.label}
                 </NavLink>
-              )
+              
             ))}
             
             {/* User profile button */}

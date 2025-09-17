@@ -1,12 +1,10 @@
-'use client'
+
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 const Footer = () => {
-  const pathname = usePathname();
   const currentYear = new Date().getFullYear();
   
-  return !pathname.includes("/services") ? (
+  return (
     <footer className="bg-white dark:bg-gray-800 mt-auto">
       <div className="container mx-auto px-6 py-8">
         <div className="flex flex-col md:flex-row justify-between">
@@ -29,6 +27,9 @@ const Footer = () => {
               </li>
               <li className="mb-2">
                 <Link href="/services" className="text-gray-600 dark:text-gray-300 hover:text-[#117955] hover:underline">Services</Link>
+              </li>
+              <li className="mb-2">
+                <Link href="docs.cropcare.vedpatil.in" className="text-gray-600 dark:text-gray-300 hover:text-[#117955] hover:underline">Documentation</Link>
               </li>
             </ul>
           </div>
@@ -69,7 +70,7 @@ const Footer = () => {
         </div>
       </div>
     </footer>
-  ):null;
+  );
 }
 
 export default Footer;
